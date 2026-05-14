@@ -51,137 +51,73 @@ research-company      → compose-org             → make up
 
 See [PIPELINE.md](PIPELINE.md) for the end-to-end runbook.
 
-## Quickstart — Try it end-to-end
+## Quickstart — three lines, one prompt, anywhere
 
-Clone this catalog and a substrate repo side by side, then drive the
-agent with the prompt below. The pipeline is **agent-driven but
-operator-gated** — you approve every destructive step before it
-runs.
-
-### Prerequisites
+You don't need to clone anything. From any empty directory on a
+machine with the [GitHub Copilot CLI](https://docs.github.com/copilot/concepts/agents/about-copilot-cli)
+installed:
 
 ```bash
-# Install GitHub Copilot CLI (one of these):
+mkdir colt-clone && cd colt-clone        # any name; will hold brief + fork
+copilot                                   # first run: /login
+```
+
+Then in the Copilot session, paste:
+
+```text
+Read https://raw.githubusercontent.com/arturcrmbot/zava-design-skills/main/RUNBOOK.md
+and follow it end-to-end.
+
+TARGET = colt.net
+MODE = full
+```
+
+That's it. The agent fetches the runbook + skills + primer from
+GitHub raw URLs, walks the `research-company → compose-org`
+pipeline, asks you for approval at each destructive step, and
+hands you a working fork at `./zava-control-plane-colt/` ready to
+`make up`.
+
+**Modes:**
+
+- `MODE = research-only` — just produces the brief; stops there.
+- `MODE = full` — produces brief, then forks the substrate.
+
+**Targets:** any company. `colt.net`, `bmw.com`, `ryanair.com`,
+`telefonica.com`, `hsbc.com`, etc. The agent picks the matching
+[industry primer](skills/research-company/references/industry-primers/)
+automatically.
+
+### Install Copilot CLI
+
+If you don't already have it:
+
+```bash
 brew install copilot-cli                         # macOS / Linux (Homebrew)
 curl -fsSL https://gh.io/copilot-install | bash  # macOS / Linux (script)
 npm install -g @github/copilot                   # any platform
 winget install GitHub.Copilot                    # Windows
-
-# Layout: both repos as siblings under one parent directory.
-mkdir -p ~/agent-substrate && cd ~/agent-substrate
-git clone https://github.com/arturcrmbot/zava-design-skills
-git clone https://github.com/arturcrmbot/zava-control-plane
-
-# Other tools the substrate fork will need at boot
-git --version
-python3 --version       # ≥ 3.11
-node --version          # ≥ 20
 ```
 
-### Step 1 — Open a Copilot CLI session inside the catalog
+You'll need an active [GitHub Copilot subscription](https://github.com/features/copilot/plans).
 
-```bash
-cd ~/agent-substrate/zava-design-skills
-copilot                  # first run will prompt /login
+### What you get
+
+After ~60–90 minutes of wall-clock + your approvals:
+
+```
+colt-clone/
+├── briefs/
+│   └── colt-org-brief.yaml          ← thin company overlay
+└── zava-control-plane-colt/         ← rebranded substrate fork
+    ├── api/...                      (rebranded, repacked, swapped)
+    ├── data/...
+    ├── web/...
+    └── ... (~2,200 files, ~30-40 atomic commits)
 ```
 
-### Step 2 — Paste the runbook prompt
-
-Replace `<TARGET>` with the company you want to clone (a domain name
-works best, e.g. `colt.net`, `ryanair.com`, `bmw.com`,
-`telefonica.com`). Then paste:
-
-```text
-You are exercising the two-skill design-time pipeline in this repo
-(research-company → compose-org) that forks an agentic substrate into a
-customer-flavoured digital clone.
-
-TARGET = <TARGET>
-
-READ FIRST, IN THIS ORDER (paths are relative to this repo root):
-  1. PIPELINE.md
-  2. AGENTS.md
-  3. skills/research-company/SKILL.md
-  4. skills/compose-org/SKILL.md
-  5. skills/research-company/references/industry-primers/README.md
-     (then the matching primer once you know the target's vertical)
-
-Substrate path: ../zava-control-plane (sibling of this repo). Assume
-clean main branch.
-
-YOUR TASK
-
-Step 1 — Run research-company against TARGET.
-  - Walk all four phases per skills/research-company/SKILL.md.
-  - Write briefs/<slug>-org-brief.yaml (gitignored).
-  - meta.status walks in_progress → needs_review.
-
-Step 2 — STOP. Print to me:
-  - 3 highest-confidence claims
-  - 5 most material uncertainties
-  - 3 random `confidence: high` cross-check spot-results
-  Wait for my "ok, proceed" before any further write.
-
-Step 3 — After my go-ahead, flip meta.status: ready and set
-  meta.reviewer to a one-line note ("smoke test YYYY-MM-DD").
-
-Step 4 — Run compose-org against the brief.
-  - Fork target: ../zava-control-plane-<slug>
-  - Walk Phase 0 → Phase J sequentially.
-  - After every phase print: one-line summary, last commit SHA,
-    files-touched count.
-
-Step 5 — STOP AND ASK ME before each destructive step:
-  - Phase A (git clone)
-  - Phase B (rebrand find-and-replace — show me the find/replace
-    mapping table first)
-  - Phase D (Kuzu schema swap)
-  - Phase H (data-fabric re-seed)
-  - Phase I (`make test`)
-
-Step 6 — If any phase fails, STOP. Do not improvise. Report:
-  - which phase + sub-step
-  - what command/diff failed
-  - which line of SKILL.md, primer, or brief is unclear or wrong
-  I will fix the skill/primer/brief; you re-run.
-
-CONSTRAINTS
-  - NO `git push`, NO `gh repo create`. Local-only.
-  - NEVER edit the substrate at ../zava-control-plane itself. Only
-    the new fork dir.
-  - NEVER edit a skill, primer, or brief silently mid-run. If you
-    find them wrong, stop and tell me.
-  - Stay agnostic in commit messages.
-  - If the SKILL.md says X, do X verbatim. If X is unclear, ask.
-
-START NOW with the read-and-summarise step. Wait for "go" before
-any write.
-```
-
-### What success looks like
-
-After ~60–90 minutes of wall-clock + your approvals at each gate:
-
-- `../zava-design-skills/briefs/<slug>-org-brief.yaml` — committed
-  facts about TARGET, `meta.status: ready`.
-- `../zava-control-plane-<slug>/` — a local git repo with ~30–40
-  atomic commits; substrate rebranded; data fabric repacked; Kuzu
-  schema swapped; personae generated; ~25+ stub domains added;
-  Node mocks scaffolded.
-- `make up` in the fork boots a customised demo at
-  `http://localhost:5273`.
-
-### When something breaks
-
-The pipeline is v1.0.0. Expect rough edges. When the agent stops
-with "this phase failed because line N of SKILL.md is unclear":
-
-- Edit the skill or primer to fix the underlying issue.
-- Re-run with `--allow-overwrite`.
-- Commit your skill/primer fix back to this catalog.
-
-Repeating the bug fix in another fork is wasted work; capture it
-once.
+`cd zava-control-plane-colt && make up` boots the demo at
+`http://localhost:5273`.
 
 ## Skills Catalog
 
@@ -197,15 +133,54 @@ once.
 |-------|-------------|
 | [**compose-org**](skills/compose-org/) | Fork an agentic substrate into a customer-flavoured digital clone using an `org-brief` + the matching industry primer. Rebrands, repacks the data fabric, swaps entity kinds, regenerates personae/domains, scaffolds stack mocks. Local-only fork by default. |
 
-## How to Use
+## How it works under the hood
 
-These skills target the **GitHub Copilot CLI** (`copilot`) primarily,
-with secondary support for Cursor, VS Code Copilot Chat, and Claude
-Code. Skills load from `SKILL.md` by the runtime's standard mechanism.
+The Copilot CLI agent fetches the bootstrap doc by URL:
 
-**Manual invocation** is documented in the
-[Quickstart](#quickstart--try-it-end-to-end) above. The two-skill chain
-is also documented in detail in [PIPELINE.md](PIPELINE.md).
+- [`RUNBOOK.md`](RUNBOOK.md) — the master orchestrator the agent
+  reads first. Tells it which SKILL.md / primer / schema files to
+  fetch (also by URL) and in what order.
+
+Then it walks the two-skill pipeline:
+
+1. **`research-company`** ([SKILL.md](skills/research-company/SKILL.md))
+   — read the target's public footprint, emit a thin
+   `org-brief.yaml`.
+2. **`compose-org`** ([SKILL.md](skills/compose-org/SKILL.md)) —
+   read the signed-off brief + matching industry primer, clone the
+   substrate, rebrand, repack the data fabric, swap the entity-kind
+   schema, generate personae, extend the domain registry, scaffold
+   stack mocks.
+
+See [PIPELINE.md](PIPELINE.md) for the cross-skill contract and
+detailed runbook.
+
+## Power-user mode — clone the catalog locally
+
+For catalog contributors (editing skills/primers, debugging the
+pipeline, working offline) you can also clone the catalog and run
+the agent against local files instead of GitHub raw URLs:
+
+```bash
+mkdir -p ~/agent-substrate && cd ~/agent-substrate
+git clone https://github.com/arturcrmbot/zava-design-skills
+git clone https://github.com/arturcrmbot/zava-control-plane
+cd zava-design-skills
+copilot
+```
+
+Then prompt:
+
+```text
+Read skills/research-company/SKILL.md and skills/compose-org/SKILL.md
+and run them against colt.net (mode=full). Substrate is at
+../zava-control-plane.
+```
+
+Output lands inside the catalog (`briefs/`, gitignored) and the fork
+as a sibling (`../zava-control-plane-colt/`). This is the
+contributor's preferred mode because skill edits are picked up
+immediately without push-and-re-fetch.
 
 ## Repository Structure
 

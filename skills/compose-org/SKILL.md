@@ -47,14 +47,21 @@ existing industry primer.
 
 ## Inputs
 
-1. **Brief path** — `briefs/<slug>-org-brief.yaml` (relative to this
-   catalog repo or absolute).
-2. **Substrate path** (optional) — local path to the substrate repo
-   to fork. Defaults to `../zava-control-plane` (sibling of this
-   catalog).
+1. **Brief path** — absolute path or path relative to cwd to the
+   org-brief produced by `research-company` (e.g.
+   `briefs/<slug>-org-brief.yaml` if you ran the catalog-clone flow,
+   or `<cwd>/briefs/<slug>-org-brief.yaml` if you ran the
+   remote-bootstrap flow per RUNBOOK.md).
+2. **Substrate source** (optional) — one of:
+   - A **local path** to an existing substrate clone (e.g.
+     `../zava-control-plane`).
+   - A **git URL** to clone from (e.g.
+     `https://github.com/arturcrmbot/zava-control-plane`).
+   - **Omitted** — defaults to cloning from
+     `https://github.com/arturcrmbot/zava-control-plane`.
 3. **Fork target path** (optional) — where to write the fork.
-   Defaults to `<substrate-path>-<slug>` (e.g.
-   `../zava-control-plane-colt`).
+   Defaults to `<cwd>/zava-control-plane-<slug>` (a sibling of the
+   `briefs/` directory inside cwd).
 
 ## Output
 
@@ -69,7 +76,7 @@ runs `gh repo create` later if they want to push.
 | Brief file exists and parses as YAML | Stop; ask operator. |
 | `brief.meta.status == ready` | Stop; tell operator to sign off the brief first. |
 | `brief.meta.primer` resolves to an existing primer | Stop; offer to graduate a stub primer or pick a different vertical. |
-| Substrate path is a clean git working tree on the default branch | Stop; refuse to clone from a dirty state. |
+| Substrate source available — either the supplied local path is a clean git tree on default branch, OR the supplied/default URL is reachable via `git ls-remote` | Stop; refuse to clone from a dirty state or a network failure. |
 | Fork target path does not already exist | Stop. To re-run, the operator removes the target dir first (or uses `--allow-overwrite` flag explicitly — see § "Idempotent re-runs"). |
 | `git`, `python3 ≥ 3.11`, `node ≥ 20`, `npm` available | Stop; install hint per missing tool. |
 
@@ -100,14 +107,26 @@ this skill for a different substrate, update the path table here.
 Run every check in the table above. Print a green/red summary. Stop
 on any red.
 
-### Phase A — Clone the substrate
+### Phase A — Acquire the substrate
+
+Either clone fresh from a git URL, or copy from a local path,
+depending on what was supplied:
 
 ```bash
-git clone <substrate-path> <fork-target>
+# Default — fresh clone from the public substrate repo
+git clone https://github.com/arturcrmbot/zava-control-plane <fork-target>
+
+# OR — if a local substrate path was supplied
+git clone <local-substrate-path> <fork-target>
+
 cd <fork-target>
 git remote remove origin            # no remote — local-only
-git checkout -b main                 # ensure clean main
+git checkout -b main                # ensure clean main
 ```
+
+Phase A always re-points `origin` to nothing — the fork is
+local-only by default. The operator runs `gh repo create` later
+if they want to push.
 
 ### Phase B — Rebrand (literal find-and-replace)
 
