@@ -16,27 +16,27 @@ See [`SKILL.md`](SKILL.md) for the canonical procedure.
 
 ## What's in scope
 
-A "digital clone" means breadth parity with the substrate's own
-envelope:
+A **thin overlay** of company-specific facts. The brief captures only
+what an industry primer can't infer:
 
-- 25–35 vertical-flavoured workflow domains
-- 50–80 personae across a 5–6-tier org chart
-- 12–18 vertical entity kinds
-- 12–20 third-party stack systems
-- 8–20 cadenced rituals
-- 4–8 named narrative arcs
-- 6–12 HUD-KPI cinematics
+- Identity, ownership, size, geography
+- ~10 subsidiaries (legal entities)
+- ~10 named ELT leaders
+- 3–5 strategic themes from last 24 months press
+- Stack overrides where the company has publicly disclosed
 
-Below that envelope the brief isn't a "digital clone" — it's a
-hero-story summary, and downstream `compose-org` will produce a
-toy-looking fork.
+Vertical breadth (function tree, regulator catalogue, entity kinds,
+proposed-domain library, rituals, KPI cinematics) lives in the
+matching industry primer. `compose-org` reads both at fork time.
 
 ## What's NOT in scope
 
 - Single-process deep dives → use `threadlight-design`
 - Pitch decks → use a deck generator
 - Code generation → out of scope for any research skill
-- Post-hoc workshop summaries → out of scope
+- Exhaustive personae harvest — `compose-org` expands archetypes
+  from the primer via faker at fork time
+- Domains / regulators / KPIs / rituals — those are primer canon
 
 ## Output
 
@@ -44,8 +44,16 @@ Always writes to `briefs/<slug>-org-brief.yaml` (relative to operator
 cwd). `briefs/` is gitignored — per-engagement output stays out of
 the public catalog. See [AGENTS.md § 2.5](../../AGENTS.md#25--per-engagement-output-stays-in-briefs).
 
+Target size: **300–500 lines**. Anything > 800 suggests harvesting
+things the primer already covers.
+
 ## Changelog
 
-- **1.0.0** — Initial version. Thirteen-phase procedure, v2 schema,
-  five industry primers (telco / airline / auto-oem / banking /
-  retail), agnostic body, awesome-gbb-conformant frontmatter.
+- **2.0.0** (MAJOR) — Slimmed to thin-overlay design. Removed
+  `org_chart[]`, `vertical_entity_kinds[]`, `proposed_domains[]`,
+  `regulators[]`, `cadenced_rituals[]`, `kpi_cinematics[]`,
+  `functions[]` from the brief schema; those sections now live
+  exclusively in the matching industry primer. Procedure cut from
+  13 phases to 4. Target brief size cut from 1,500–3,000 lines to
+  300–500.
+- **1.0.0** — Initial version (thirteen-phase, fat-brief).
