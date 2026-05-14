@@ -61,13 +61,18 @@ runs.
 ### Prerequisites
 
 ```bash
+# Install GitHub Copilot CLI (one of these):
+brew install copilot-cli                         # macOS / Linux (Homebrew)
+curl -fsSL https://gh.io/copilot-install | bash  # macOS / Linux (script)
+npm install -g @github/copilot                   # any platform
+winget install GitHub.Copilot                    # Windows
+
 # Layout: both repos as siblings under one parent directory.
 mkdir -p ~/agent-substrate && cd ~/agent-substrate
-git clone <this-catalog-url> zava-design-skills
-git clone <substrate-repo-url> zava-control-plane
+git clone https://github.com/arturcrmbot/zava-design-skills
+git clone https://github.com/arturcrmbot/zava-control-plane
 
-# Tools
-gh --version            # GitHub CLI (with `copilot` installed)
+# Other tools the substrate fork will need at boot
 git --version
 python3 --version       # ≥ 3.11
 node --version          # ≥ 20
@@ -77,7 +82,7 @@ node --version          # ≥ 20
 
 ```bash
 cd ~/agent-substrate/zava-design-skills
-copilot
+copilot                  # first run will prompt /login
 ```
 
 ### Step 2 — Paste the runbook prompt
