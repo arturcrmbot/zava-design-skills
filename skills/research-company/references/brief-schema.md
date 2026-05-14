@@ -1,30 +1,47 @@
-# research-company brief schema.
-#
-# Authoritative JSON-Schema-style declaration of the org-brief shape
-# produced by the `research-company` skill and consumed by the
-# (future) `compose-org` skill.
-#
-# DESIGN INTENT: a brief that conforms to this schema is detailed
-# enough to drive a "digital-clone-grade" fork of the substrate, with
-# breadth parity to Zava's own envelope:
-#
-#   * 25–35 vertical-flavoured workflow domains
-#   * 50–80 personae across a 5–6-tier org chart spanning all functions
-#   * 10–12 canonical functions
-#   * 12–18 vertical entity kinds (Kuzu node tables)
-#   * 15–25 cadenced rituals + named narrative arcs
-#   * 12–20 third-party stack systems
-#
-# Output path convention:
-#   `specs/<slug>-org-brief.yaml` in the zava-design-skills repo,
-#   where <slug> = `identity.slug`.
-#
-# Every factual field MUST carry a `confidence` discriminator. Use
-# `unknown` plus an entry in `uncertainties[]` when a public-web pass
-# turned up nothing trustworthy — never invent.
+# Brief Schema
 
+Authoritative output schema for the
+[`research-company`](../SKILL.md) skill. Every brief produced by the
+skill conforms to the YAML below. Schema version is `2`.
+
+## Design intent
+
+A brief that conforms to this schema is detailed enough to drive a
+**digital-clone-grade** fork of an agentic substrate. Breadth
+parity envelope:
+
+- 25–35 vertical-flavoured workflow domains
+- 50–80 personae across a 5–6-tier org chart
+- 10–12 canonical functions
+- 12–18 vertical entity kinds
+- 15–25 cadenced rituals + named narrative arcs
+- 12–20 third-party stack systems
+
+## Output path
+
+`briefs/<slug>-org-brief.yaml` (relative to operator cwd). The
+`briefs/` directory is gitignored in the catalog repo — per-engagement
+output never ships with the public skill catalog.
+
+## Confidence discipline
+
+Every factual field MUST carry a `confidence` discriminator:
+
+| Level | Meaning |
+|---|---|
+| `high` | Two or more independent public sources agree |
+| `medium` | One authoritative source (company site, annual report, regulator filing) |
+| `low` | One secondary source (analyst aggregator, news article) |
+| `inferred` | Deduced from vertical / industry pattern, not directly stated |
+| `unknown` | No public information found; logged in `uncertainties[]` |
+
+Gaps land in `uncertainties[]` — never invented.
+
+## Schema (JSON-Schema 2020-12, expressed as YAML)
+
+```yaml
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$id: "https://zava.dev/research-company/brief.schema.yaml"
+$id: "https://zava-design-skills.dev/research-company/brief.schema.yaml"
 title: "research-company org-brief"
 type: object
 required: [meta, identity, ownership, size, geo, sources]
@@ -36,21 +53,15 @@ $defs:
   Confidence:
     type: string
     enum: [high, medium, low, inferred, unknown]
-    description: |
-      high      = two or more independent public sources agree
-      medium    = one authoritative source (company site, annual report, regulator filing)
-      low       = one secondary source (analyst aggregator, news article)
-      inferred  = deduced from vertical / industry pattern, not directly stated
-      unknown   = no public information found; logged in `uncertainties[]`
 
   Fact:
     type: object
     required: [value, confidence]
     additionalProperties: false
     properties:
-      value:        { description: "Scalar or list value." }
+      value:        {}                                   # scalar or list
       confidence:   { $ref: "#/$defs/Confidence" }
-      source_refs:  { type: array, items: { type: string }, description: "ids from `sources[]`" }
+      source_refs:  { type: array, items: { type: string } }    # ids from `sources[]`
       notes:        { type: string }
 
   Source:
@@ -80,20 +91,19 @@ $defs:
     required: [id, title, function, level, confidence]
     additionalProperties: false
     properties:
-      id:           { type: string, pattern: "^[a-z][a-z0-9_]*$", description: "snake_case persona id — becomes a folder under `api/server/personae/<id>/` after compose-org." }
-      title:        { type: string, description: "Job title as the company uses it." }
-      name:         { type: string, description: "Real name when public; omit for non-public roles." }
-      function:     { type: string, description: "ID from `functions[]`." }
+      id:           { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+      title:        { type: string }
+      name:         { type: string }                # only for public level-1/2 leaders
+      function:     { type: string }                # id from `functions[]`
       level:
         type: integer
         minimum: 1
         maximum: 6
-        description: "1 = CEO / chair; 2 = ELT / EVP; 3 = SVP / functional head; 4 = VP / regional lead; 5 = director / manager; 6 = individual contributor."
-      reports_to:   { type: string, description: "Another persona's `id`. Empty for level 1." }
+      reports_to:   { type: string }                # another persona's id
       count:
         type: integer
         minimum: 1
-        description: "How many of this role exist (e.g. 8 NOC controllers). 1 by default."
+        description: "How many of this role exist (e.g. 8 NOC controllers)."
       confidence:   { $ref: "#/$defs/Confidence" }
       source_refs:  { type: array, items: { type: string } }
       notes:        { type: string }
@@ -112,7 +122,7 @@ properties:
         type: string
         enum: [in_progress, ready, needs_review]
       schema_version:  { const: 2 }
-      reviewer:        { type: string, description: "Human who signed off, once ready." }
+      reviewer:        { type: string }
 
   identity:
     type: object
@@ -120,14 +130,14 @@ properties:
     additionalProperties: false
     properties:
       name:            { type: string }
-      slug:            { type: string, pattern: "^[a-z][a-z0-9-]*$", description: "Kebab-case form; the OTEL namespace and fork-repo suffix." }
+      slug:            { type: string, pattern: "^[a-z][a-z0-9-]*$" }
       short_name:      { type: string }
       domain:          { type: string }
       description:     { $ref: "#/$defs/Fact" }
       brand_voice:     { $ref: "#/$defs/Fact" }
       industry:        { $ref: "#/$defs/Fact" }
       sub_industry:    { $ref: "#/$defs/Fact" }
-      tagline:         { $ref: "#/$defs/Fact", description: "The company's own marketing one-liner." }
+      tagline:         { $ref: "#/$defs/Fact" }
       ticker_symbols:  { $ref: "#/$defs/Fact" }
 
   ownership:
@@ -152,7 +162,12 @@ properties:
       revenue_currency: { $ref: "#/$defs/Fact" }
       revenue_period:  { $ref: "#/$defs/Fact" }
       customers_count: { $ref: "#/$defs/Fact" }
-      assets_count:    { $ref: "#/$defs/Fact", description: "Vertical-native scale signal: on-net buildings, aircraft in fleet, dealers, branches, plants." }
+      assets_count:
+        $ref: "#/$defs/Fact"
+        description: |
+          Vertical-native scale signal: on-net buildings (telco),
+          aircraft (airline), dealers (auto OEM), branches (retail
+          bank), plants (FMCG).
 
   geo:
     type: object
@@ -169,13 +184,9 @@ properties:
         items: { $ref: "#/$defs/Fact" }
       footprint_notes:
         type: array
-        items: { $ref: "#/$defs/Fact", description: "Vertical-native scale: e.g. '32,000+ on-net buildings', '250+ cloud PoPs', '34 EMEA countries'." }
+        items: { $ref: "#/$defs/Fact" }
 
   subsidiaries:
-    description: |
-      Drives `SUBSIDIARIES` in `data_fabric/employee_gen.py` and the
-      first-class `Subsidiary` nodes. Cap at 15 — the holding plus
-      every materially-sized opco.
     type: array
     maxItems: 15
     items:
@@ -195,11 +206,7 @@ properties:
         notes:         { type: string }
 
   functions:
-    description: |
-      10–12 canonical functions present in the org. Drives
-      `api/shared/functions.py`. Keep aligned with Zava's existing keys
-      where possible; add vertical-specific ones only when the org's
-      structure genuinely demands it.
+    description: "10–12 canonical functions; ≤ 3 hero."
     type: array
     minItems: 8
     maxItems: 14
@@ -213,33 +220,21 @@ properties:
         importance:
           type: string
           enum: [hero, core, support]
-          description: "hero = spotlight in demo; core = always-on; support = present but secondary. AT MOST 3 hero."
-        leader_persona_id: { type: string, description: "References `org_chart[].id` of the function's head." }
+        leader_persona_id: { type: string }
         notes:         { type: string }
 
   org_chart:
     description: |
-      The full personae graph — flat list of 50–80 PersonaNode rows,
-      each linked by `reports_to` to form a 5–6-tier tree. Drives one
-      `api/server/personae/<id>/` folder per row after compose-org runs
-      `compose-persona` over the list. Cover every function: each
-      function in `functions[]` should have ≥3 personae rows, with the
-      hero functions getting ≥6.
-
-      Use the `count` field to express "N of these exist" (e.g. 8 NOC
-      controllers, 5 regional account directors) without exploding the
-      row count — compose-org expands them with realistic names via
-      faker in `data_fabric/employee_gen.py`.
+      Flat list of 50–80 PersonaNode rows; linked by `reports_to` to
+      form a 5–6-tier tree. Each function in `functions[]` has ≥3
+      personae; hero functions ≥6.
     type: array
     minItems: 40
     maxItems: 100
     items: { $ref: "#/$defs/PersonaNode" }
 
   vertical_entity_kinds:
-    description: |
-      Kuzu node-table changes for the fork. Cap at 18. Reference
-      heuristics in SKILL.md. Each row either renames an existing
-      Zava agency-specific table or introduces a brand new node kind.
+    description: "Kuzu-style node-kind changes; cap 18. See industry primers."
     type: array
     minItems: 8
     maxItems: 18
@@ -248,23 +243,21 @@ properties:
       required: [kind, description, swaps_for]
       additionalProperties: false
       properties:
-        kind:          { type: string, description: "PascalCase Kuzu label." }
+        kind:          { type: string }
         swaps_for:
           type: string
           enum: [Brand, Campaign, Pitch, MediaPlan, Subsidiary, "(new)"]
         description:   { type: string }
         relations:
           type: array
-          items: { type: string, description: "PascalCase relation: 'TERMINATES_AT', 'PRICED_AS', 'OWNED_BY' …" }
+          items: { type: string }
 
   proposed_domains:
     description: |
-      The vertical's operational surface as workflow types. Aim for
-      **25–35 rows** spanning every function — breadth not depth.
-      Each row becomes one compose-domain invocation. AT MOST 3 hero
-      domains; the rest are supporting. Generic Zava domains
-      (expense-claim, hiring, vendor-kyc, ap-invoice, …) still apply
-      and do NOT appear here — only vertical-specific workflows.
+      Vertical-flavoured workflow types. **25–35 rows** spanning every
+      function. ≤ 3 hero. Generic substrate workflows (expense-claim,
+      hiring, vendor-kyc, ap-invoice…) are NOT listed here — only
+      vertical-specific ones.
     type: array
     minItems: 20
     maxItems: 40
@@ -279,20 +272,12 @@ properties:
           type: string
           enum: [hero, supporting]
         summary:       { type: string }
-        function:      { type: string, description: "ID from `functions[]`." }
+        function:      { type: string }
         cadence:
           type: string
           enum: [ad-hoc, daily, weekly, monthly, quarterly, annual]
-          description: "How often the workflow naturally fires. Drives `realistic_interval_seconds` in `domains.py`."
 
   stack:
-    description: |
-      Third-party systems the org runs. Drives which Node MCP servers
-      compose-org generates under `mocks/`. Aim for 12–20 rows.
-      Include at least: CRM, ITSM, ERP, HCM, identity, esign, the
-      vertical-native operational system (OSS/BSS / reservations /
-      MES / core banking / OMS), an observability stack, and 2–3
-      vertical-specific vendors (e.g. Cisco+Juniper for telco).
     type: object
     additionalProperties: false
     properties:
@@ -342,15 +327,9 @@ properties:
             candidates:
               type: array
               items: { type: string }
-              description: "When confidence is low/inferred: shortlist of plausible vendors."
             notes:     { type: string }
 
   regulators:
-    description: |
-      Jurisdictional overlays. Drives policy nodes seeded by
-      `data_fabric/locales.py`. Cover every country in
-      `geo.countries_present` plus any horizontal regulator
-      (data-protection, anti-trust, environmental).
     type: array
     items:
       type: object
@@ -359,7 +338,7 @@ properties:
       properties:
         id:            { type: string, pattern: "^[a-z][a-z0-9-]*$" }
         name:          { type: string }
-        country:       { type: string, description: "ISO-3166-1 alpha-2." }
+        country:       { type: string }
         domain:
           type: string
           enum: [telecom, aviation, finance, banking, securities, insurance, energy, environmental, data-protection, anti-trust, food-safety, pharma, automotive, broadcasting, gaming, customs, labour, taxation, healthcare, defence]
@@ -392,11 +371,7 @@ properties:
         items: { $ref: "#/$defs/Fact" }
 
   strategic_themes:
-    description: |
-      Recent strategic narratives — M&A, transformation programmes,
-      AI bets, ESG, crises. Drives `narrative_arcs.py` seeds + the
-      ambient-agent backstories. Aim for 5–8 rows; ≥3 should be
-      directly press-citable from the last 24 months.
+    description: "5–8 themes from the last 24 months of press / annual reports."
     type: array
     minItems: 4
     maxItems: 10
@@ -404,11 +379,8 @@ properties:
 
   cadenced_rituals:
     description: |
-      Periodic rituals the org runs. Drives `data_fabric/cadenced_rituals.py`
-      seeds and helps make the "leave it running for a week" demo
-      feel real. Each entry has a name, a cadence, and a summary of
-      what happens. Aim for 12–20 rows spanning daily / weekly /
-      monthly / quarterly / annual.
+      Periodic rituals the org runs. Aim for 12–20 rows spanning
+      daily / weekly / monthly / quarterly / annual.
     type: array
     minItems: 8
     maxItems: 25
@@ -423,14 +395,11 @@ properties:
           type: string
           enum: [daily, weekly, biweekly, monthly, quarterly, semiannual, annual]
         summary:       { type: string }
-        owner_function: { type: string, description: "ID from `functions[]`." }
+        owner_function: { type: string }
         confidence:    { $ref: "#/$defs/Confidence" }
 
   narrative_arcs:
-    description: |
-      Named storylines that the simulator should be able to play out
-      over a multi-hour or multi-day run — drawn from real recent
-      events so the demo feels lived-in. 4–8 rows.
+    description: "Named storylines drawn from real recent events. 4–8 rows."
     type: array
     minItems: 3
     maxItems: 10
@@ -444,17 +413,13 @@ properties:
         summary:       { type: string }
         function_focus:
           type: array
-          items: { type: string, description: "function ids" }
-        timeline_hint:
-          type: string
-          description: "real or fictionalised dates: '2023-Q4 → 2026-Q2'"
+          items: { type: string }
+        timeline_hint: { type: string }
         confidence:    { $ref: "#/$defs/Confidence" }
         source_refs:   { type: array, items: { type: string } }
 
   kpi_cinematics:
-    description: |
-      The HUD KPIs the vertical demands — drives `web/blueprint/` cinematic
-      strips. Each row is one KPI with a target trend story. 6–12 rows.
+    description: "HUD KPIs the vertical demands. 6–12 rows."
     type: array
     minItems: 6
     maxItems: 15
@@ -482,3 +447,18 @@ properties:
   uncertainties:
     type: array
     items: { $ref: "#/$defs/Uncertainty" }
+```
+
+## Cross-references in the brief
+
+- `subsidiaries[].regulator` → an `id` in `regulators[]`
+- `functions[].leader_persona_id` → an `id` in `org_chart[]`
+- `org_chart[].function` → an `id` in `functions[]`
+- `org_chart[].reports_to` → another `org_chart[].id`
+- `proposed_domains[].function` → an `id` in `functions[]`
+- `cadenced_rituals[].owner_function` → an `id` in `functions[]`
+- `narrative_arcs[].function_focus[]` → `id`s in `functions[]`
+- `*.source_refs[]` → `id`s in `sources[]`
+
+The brief is considered valid only when every cross-reference
+resolves.

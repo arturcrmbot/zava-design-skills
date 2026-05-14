@@ -1,58 +1,140 @@
-# zava-design-skills
+# 🧬 Zava Design Skills
 
-Operator-side design-time skills for the
-[`zava-control-plane`](https://github.com/arturcrmbot/zava-control-plane)
-substrate. **Not** part of the substrate itself, not committed alongside
-it.
+> Operator-side design-time skills for forking the [zava-control-plane](https://github.com/arturcrmbot/zava-control-plane) substrate into customer-flavoured digital-clone demos.
 
-## What lives here
+[![Skills](https://img.shields.io/badge/skills-1-blue)](#skills-catalog)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Convention: awesome-gbb](https://img.shields.io/badge/convention-awesome--gbb-blueviolet)](https://github.com/aiappsgbb/awesome-gbb)
 
-Skills the operator runs from a Copilot CLI / IDE session to **produce a
-new customer-flavoured fork** of the Zava control plane (e.g. a Colt /
-Ryanair / BMW / Telefónica clone). The substrate proper ships with its
-own design-time skills under `docs/superpowers/skills/` — those extend a
-single repo. The skills here are different: they *generate forks*.
+---
 
-| Skill | Role |
-|---|---|
-| [`skills/research-company/`](skills/research-company/) | Profile a real-world organisation against the public web; emit a structured `org-brief.yaml` for compose-org to consume. |
-| `skills/compose-org/` *(to be authored)* | Fork the zava-control-plane repo into a customer-flavoured clone using an org-brief. |
+## Contents
 
-## Cut: why a sibling repo?
+- [What this catalog is](#what-this-catalog-is)
+- [Pipeline](#pipeline)
+- [Skills Catalog](#skills-catalog)
+- [How to Use](#how-to-use)
+- [Repository Structure](#repository-structure)
+- [Contributing](#contributing)
 
-- The substrate ships clean — these tools are operator infrastructure,
-  not product surface.
-- A Colt brief / Ryanair brief / BMW brief is **engagement-sensitive**.
-  Keeping them out of the substrate's public history is the safe default.
-- Tools here evolve independently of the substrate's release cadence.
+---
 
-## Use
+## What this catalog is
 
-```bash
-# In a Copilot CLI session, with cwd inside the *substrate* repo:
-> Run `research-company` (from ../zava-design-skills/skills/research-company/SKILL.md)
-> on `colt.net`. Write the output to ../zava-design-skills/specs/colt-org-brief.yaml.
+A small **agnostic** skill catalog — modelled on the
+[`awesome-gbb`](https://github.com/aiappsgbb/awesome-gbb) skill-catalog
+convention — for producing **digital-clone-grade** forks of the
+agentic substrate. A "digital clone" means breadth parity with the
+substrate's own envelope: 25+ vertical-flavoured workflows, 50–80
+personae across a 5–6-tier org chart, 12–18 vertical entity kinds.
+Not one or two hero use cases — a credible mini-organisation.
+
+Skills here are **agnostic** (no customer names, no PoC names — see
+[AGENTS.md](AGENTS.md) § 2.1). Per-engagement output (briefs for
+specific target organisations) lives under `briefs/` and is
+**gitignored** by default; that directory is engagement-sensitive.
+
+## Pipeline
+
+```
+research-company      → compose-org            → graduate.sh
+(profile target)        (fork + customise        (apply into
+                         the substrate)           new repo)
+                         (TO BE AUTHORED)
 ```
 
-Outputs land under [`specs/`](specs/) in this repo.
+1. **`research-company`** — read the target's public footprint, emit
+   a structured `org-brief.yaml`. Operator reviews + signs off.
+2. **`compose-org`** *(to be authored)* — read a signed-off brief,
+   fork the substrate, rebrand it, repopulate the data fabric,
+   regenerate domains + personae.
+3. **`graduate-org.sh`** — produced by `compose-org`, applied by the
+   operator in the new fork.
 
-## Layout
+## Skills Catalog
+
+### 🔍 Discovery & Profiling
+
+| Skill | Description |
+|-------|-------------|
+| [**research-company**](skills/research-company/) | Profile a real-world organisation against the public web and emit a structured `org-brief` YAML detailed enough to drive a digital-clone-grade substrate fork. Thirteen-phase procedure; every claim carries a `confidence` discriminator. |
+
+### 🏗️ Composition
+
+*(stub — `compose-org` to be authored)*
+
+## How to Use
+
+These skills target the **GitHub Copilot CLI** (`gh copilot`) primarily,
+with secondary support for Cursor, VS Code Copilot Chat, and Claude
+Code. Skills load from `SKILL.md` by the runtime's standard mechanism.
+
+**Manual invocation (any runtime):**
+
+```bash
+# Open a session with this repo in cwd
+gh copilot
+
+# Inside the session, point the agent at a skill:
+> Read skills/research-company/SKILL.md and run it against colt.net.
+```
+
+**Pipe a brief into the next stage (once `compose-org` exists):**
+
+```bash
+gh copilot
+> Read skills/compose-org/SKILL.md and run it against
+> briefs/colt-org-brief.yaml.
+```
+
+## Repository Structure
 
 ```
 zava-design-skills/
-├─ skills/                — design-time skills (one folder each)
-│  └─ research-company/   — SKILL.md + brief.schema.yaml + README.md
-├─ specs/                 — output briefs, one per target company
-└─ README.md
+├── README.md                  # ← you are here (catalog index)
+├── AGENTS.md                  # invariants (read before editing)
+├── LICENSE                    # MIT
+├── .gitignore                 # ignores briefs/, specs/
+├── briefs/                    # per-engagement org briefs (gitignored)
+└── skills/
+    └── <skill-name>/
+        ├── SKILL.md           # frontmatter + procedure
+        ├── README.md          # extended docs
+        └── references/        # canonical reference data (industry primers, schema)
 ```
 
-## Local-only by default
+## Contributing
 
-This repo is local-only. No GitHub remote is configured by default.
-If you want to share a brief with a colleague, push to a private
-fork or zip it.
+> [!IMPORTANT]
+> **Read [AGENTS.md](AGENTS.md) first** before editing any skill. It
+> captures the invariants — agnostic wording, frontmatter shape,
+> `metadata.version` rules, schema-file canon, the mass-edit safety
+> rails — that aren't enforced by CI and have bitten us in production
+> (and in our sister catalog, `awesome-gbb`).
 
-## Pairs with
+1. Fork & branch from `main`.
+2. Place new skills under `skills/<your-skill-name>/SKILL.md`.
+3. Keep customer/PoC names **out** of skill bodies — they belong in
+   the gitignored `briefs/` directory or in a separate per-engagement
+   repo.
+4. Open a PR.
 
-- [`zava-control-plane`](../zava-control-plane) — the substrate
-  these skills generate forks of.
+### Skill quality checklist
+
+- [ ] Strict frontmatter (`name`, `description: >`, `metadata.version`)
+- [ ] `description` ≤ 1024 chars including `USE FOR` / `DO NOT USE FOR`
+- [ ] No customer names, real GUIDs, real ARM IDs in body
+- [ ] Procedure is actionable (the agent *does* the work, not just advises)
+- [ ] Tested with at least one runtime
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+## See also
+
+- [`awesome-gbb`](https://github.com/aiappsgbb/awesome-gbb) — the
+  canonical Microsoft GBB skill catalog. Conventions in this repo
+  mirror that one.
+- [`zava-control-plane`](https://github.com/arturcrmbot/zava-control-plane)
+  — the agentic substrate these skills produce forks of.

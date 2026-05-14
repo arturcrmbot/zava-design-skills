@@ -1,12 +1,15 @@
-# Generated artefacts and scratch
+# Per-engagement output artefacts. NEVER commit customer briefs to the
+# public skill catalog — see AGENTS.md § 2.1 (skills are agnostic).
+briefs/
+specs/
+
+# Python
 *.pyc
 __pycache__/
+.venv/
+
+# Editor / OS
 .DS_Store
-*.swp
 .idea/
 .vscode/
-
-# Per-engagement briefs are engagement-sensitive — kept locally only.
-# Uncomment the next line if you want to also gitignore them inside
-# this local repo (rather than commit to a local-only repo).
-# specs/*.yaml
+*.swp

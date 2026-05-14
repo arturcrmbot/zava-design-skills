@@ -1,55 +1,51 @@
 # research-company
 
-Design-time skill: profile a real organisation against the public web
-and emit a structured `org-brief` YAML detailed enough to drive a
-**digital-clone-grade** fork of the `zava-control-plane` substrate.
+Profile a real-world organisation against the public web and emit a
+structured **org-brief** YAML detailed enough to drive a
+**digital-clone-grade** fork of an agentic substrate.
 
-## When to use
-
-When a colleague says *"I want to demo the substrate flavoured for
-&lt;Customer&gt;"*. The brief produced here is the single input to
-`compose-org` (the sibling skill, to be authored), which forks the
-substrate repo into `zava-control-plane-<slug>`.
-
-## How to invoke
-
-In a Copilot CLI session, with cwd anywhere on the filesystem:
-
-> Read [`SKILL.md`](SKILL.md) and run it against `colt.net`. Write
-> output to `specs/colt-org-brief.yaml` in this repo.
-
-The agent runs the thirteen-phase procedure end-to-end.
-
-## What the output looks like
-
-A YAML file of roughly **1,500–3,000 lines** containing:
-
-- identity / ownership / size / geo
-- 8–15 subsidiaries
-- 10–12 functions
-- **40–80** personae across a 5–6-tier org chart
-- 8–18 vertical entity kinds
-- **20–40** vertical-flavoured workflow domains
-- 12–20 third-party stack systems
-- 10–20 regulators
-- 8–20 cadenced rituals
-- 4–8 named narrative arcs
-- 6–12 HUD-KPI cinematics
-- 10+ cited sources, with `confidence:` on every fact
-
-Below that breadth, the brief isn't a "digital clone" — it's a
-hero-story summary.
+See [`SKILL.md`](SKILL.md) for the canonical procedure.
 
 ## Files
 
 | File | What it is |
 |---|---|
-| [`SKILL.md`](SKILL.md) | The thirteen-phase procedure the agent follows. |
-| [`brief.schema.yaml`](brief.schema.yaml) | Authoritative schema (v2) for the output. |
+| [`SKILL.md`](SKILL.md) | The thirteen-phase procedure. Strict frontmatter (≤1024 char description, semver). |
+| [`references/brief-schema.md`](references/brief-schema.md) | Authoritative schema for the output YAML. |
+| [`references/industry-primers/`](references/industry-primers/) | Canonical industry shorthand — regulator IDs, entity kinds, workflow names, KPI sets — per vertical. **Canon** ([AGENTS.md § 2.2](../../AGENTS.md#22--reference-data-files-are-canon--do-not-normalize)) — do not normalize. |
 
-## Output convention
+## What's in scope
 
-Always writes to `../../specs/<slug>-org-brief.yaml` (relative to
-this skill folder; the `specs/` directory in the repo root).
+A "digital clone" means breadth parity with the substrate's own
+envelope:
 
-Never writes anywhere else.
+- 25–35 vertical-flavoured workflow domains
+- 50–80 personae across a 5–6-tier org chart
+- 12–18 vertical entity kinds
+- 12–20 third-party stack systems
+- 8–20 cadenced rituals
+- 4–8 named narrative arcs
+- 6–12 HUD-KPI cinematics
+
+Below that envelope the brief isn't a "digital clone" — it's a
+hero-story summary, and downstream `compose-org` will produce a
+toy-looking fork.
+
+## What's NOT in scope
+
+- Single-process deep dives → use `threadlight-design`
+- Pitch decks → use a deck generator
+- Code generation → out of scope for any research skill
+- Post-hoc workshop summaries → out of scope
+
+## Output
+
+Always writes to `briefs/<slug>-org-brief.yaml` (relative to operator
+cwd). `briefs/` is gitignored — per-engagement output stays out of
+the public catalog. See [AGENTS.md § 2.5](../../AGENTS.md#25--per-engagement-output-stays-in-briefs).
+
+## Changelog
+
+- **1.0.0** — Initial version. Thirteen-phase procedure, v2 schema,
+  five industry primers (telco / airline / auto-oem / banking /
+  retail), agnostic body, awesome-gbb-conformant frontmatter.
