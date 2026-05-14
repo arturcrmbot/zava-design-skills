@@ -1,6 +1,6 @@
 # 🧬 Zava Design Skills
 
-> Operator-side design-time skills for forking the [zava-control-plane](<your-fork>/zava-control-plane) substrate into customer-flavoured digital-clone demos.
+> Operator-side design-time skills for forking the [zava-control-plane](https://github.com/arturcrmbot/zava-control-plane) substrate into customer-flavoured digital-clone demos.
 
 [![Skills](https://img.shields.io/badge/skills-2-blue)](#skills-catalog)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -251,5 +251,5 @@ MIT — see [LICENSE](LICENSE).
 - [`awesome-gbb`](https://github.com/aiappsgbb/awesome-gbb) — the
   canonical Microsoft GBB skill catalog. Conventions in this repo
   mirror that one.
-- [`zava-control-plane`](<your-fork>/zava-control-plane)
+- [`zava-control-plane`](https://github.com/arturcrmbot/zava-control-plane)
   — the agentic substrate these skills produce forks of.
