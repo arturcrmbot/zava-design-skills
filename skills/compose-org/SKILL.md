@@ -337,7 +337,7 @@ Print to operator:
         http://localhost:5275 (blueprint microsite)
 
    To promote a stub domain to live:
-     gh copilot
+     copilot
      > Run compose-domain on `<workflow_type>` (inside this fork)
 
    To push to GitHub later:

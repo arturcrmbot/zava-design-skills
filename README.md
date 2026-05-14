@@ -67,7 +67,7 @@ git clone <this-catalog-url> zava-design-skills
 git clone <substrate-repo-url> zava-control-plane
 
 # Tools
-gh --version            # GitHub CLI (with `gh copilot` installed)
+gh --version            # GitHub CLI (with `copilot` installed)
 git --version
 python3 --version       # ≥ 3.11
 node --version          # ≥ 20
@@ -77,7 +77,7 @@ node --version          # ≥ 20
 
 ```bash
 cd ~/agent-substrate/zava-design-skills
-gh copilot
+copilot
 ```
 
 ### Step 2 — Paste the runbook prompt
@@ -194,7 +194,7 @@ once.
 
 ## How to Use
 
-These skills target the **GitHub Copilot CLI** (`gh copilot`) primarily,
+These skills target the **GitHub Copilot CLI** (`copilot`) primarily,
 with secondary support for Cursor, VS Code Copilot Chat, and Claude
 Code. Skills load from `SKILL.md` by the runtime's standard mechanism.
 

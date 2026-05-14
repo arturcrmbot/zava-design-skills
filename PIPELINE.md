@@ -11,7 +11,7 @@ industry primer, one resulting fork.**
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                       gh copilot session                            │
+│                         copilot session                                   │
 │                                                                     │
 │   Step 1                       Step 2                               │
 │  ┌──────────────────┐         ┌──────────────────┐                  │
@@ -65,7 +65,7 @@ demo fork. Typical wall-clock: 60–90 minutes.
 
 ```bash
 cd zava-design-skills
-gh copilot
+copilot
 ```
 
 ### 2. Profile the target
@@ -130,7 +130,7 @@ Inside the new fork:
 
 ```bash
 cd <substrate>-<slug>
-gh copilot
+copilot
 > Run compose-domain on `<workflow_type>` (which is currently a stub).
 ```
 
