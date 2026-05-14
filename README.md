@@ -2,7 +2,7 @@
 
 > Operator-side design-time skills for forking the [zava-control-plane](https://github.com/arturcrmbot/zava-control-plane) substrate into customer-flavoured digital-clone demos.
 
-[![Skills](https://img.shields.io/badge/skills-1-blue)](#skills-catalog)
+[![Skills](https://img.shields.io/badge/skills-2-blue)](#skills-catalog)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Convention: awesome-gbb](https://img.shields.io/badge/convention-awesome--gbb-blueviolet)](https://github.com/aiappsgbb/awesome-gbb)
 
@@ -37,19 +37,19 @@ specific target organisations) lives under `briefs/` and is
 ## Pipeline
 
 ```
-research-company      → compose-org            → graduate.sh
-(profile target)        (fork + customise        (apply into
-                         the substrate)           new repo)
-                         (TO BE AUTHORED)
+research-company      → compose-org             → make up
+(profile target)        (fork the substrate)      (boot the demo)
 ```
 
 1. **`research-company`** — read the target's public footprint, emit
-   a structured `org-brief.yaml`. Operator reviews + signs off.
-2. **`compose-org`** *(to be authored)* — read a signed-off brief,
-   fork the substrate, rebrand it, repopulate the data fabric,
-   regenerate domains + personae.
-3. **`graduate-org.sh`** — produced by `compose-org`, applied by the
-   operator in the new fork.
+   a thin `org-brief.yaml`. Operator reviews + signs off.
+2. **`compose-org`** — read the signed-off brief + matching industry
+   primer, clone the substrate to a sibling repo, rebrand, repack the
+   data fabric, swap the entity-kind schema, generate personae, extend
+   the domain registry, scaffold stack mocks.
+3. **`make up`** — operator boots the customised fork.
+
+See [PIPELINE.md](PIPELINE.md) for the end-to-end runbook.
 
 ## Skills Catalog
 
@@ -57,11 +57,13 @@ research-company      → compose-org            → graduate.sh
 
 | Skill | Description |
 |-------|-------------|
-| [**research-company**](skills/research-company/) | Profile a real-world organisation against the public web and emit a structured `org-brief` YAML detailed enough to drive a digital-clone-grade substrate fork. Thirteen-phase procedure; every claim carries a `confidence` discriminator. |
+| [**research-company**](skills/research-company/) | Profile a real-world organisation against the public web and emit a thin `org-brief` YAML — the company-specific overlay that pairs with an industry primer to drive a digital-clone-grade substrate fork. |
 
 ### 🏗️ Composition
 
-*(stub — `compose-org` to be authored)*
+| Skill | Description |
+|-------|-------------|
+| [**compose-org**](skills/compose-org/) | Fork an agentic substrate into a customer-flavoured digital clone using an `org-brief` + the matching industry primer. Rebrands, repacks the data fabric, swaps entity kinds, regenerates personae/domains, scaffolds stack mocks. Local-only fork by default. |
 
 ## How to Use
 
