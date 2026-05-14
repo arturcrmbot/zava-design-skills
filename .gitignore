@@ -1,0 +1,12 @@
+# Generated artefacts and scratch
+*.pyc
+__pycache__/
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Per-engagement briefs are engagement-sensitive — kept locally only.
+# Uncomment the next line if you want to also gitignore them inside
+# this local repo (rather than commit to a local-only repo).
+# specs/*.yaml
