@@ -1,23 +1,22 @@
 ---
 name: compose-org
 description: >
-  Fork an agentic-substrate repo into a customer-flavoured digital
-  clone, driven by an org-brief YAML (produced by research-company)
-  paired with the matching industry primer. Clones the substrate to
-  a sibling repo, rebrands literal tokens, repacks the data-fabric
-  generators against the brief's subsidiaries + named ELT, swaps the
-  Kuzu entity-kind tables per the primer, extends the domain registry
-  with the primer's vertical-specific workflow library, generates
-  personae folders (ELT named from the brief, archetypes from the
-  primer expanded via faker), seeds cadenced rituals + narrative
-  arcs, and emits Node MCP mocks for the brief's stack overrides.
-  Local-only fork by default — no GitHub push. Refuses dirty trees,
-  refuses to overwrite an existing fork. Idempotent re-runnable.
+  Fork an agentic substrate into a customer-flavoured digital clone
+  using an org-brief YAML (from research-company) + the matching
+  industry primer. Clones the substrate to a sibling repo, rebrands
+  literal tokens, repacks the data-fabric generators against the
+  brief's subsidiaries + named ELT, swaps the Kuzu entity-kind
+  tables per the primer, extends the domain registry with the
+  primer's workflow library, generates personae (ELT named from the
+  brief, archetypes from the primer), seeds cadenced rituals +
+  narrative arcs, and scaffolds Node MCP mocks for the brief's stack
+  overrides. Local-only fork by default; no GitHub push. Refuses
+  dirty trees, idempotent re-runnable.
   USE FOR: fork the substrate for a named customer (Telco, FSI,
   Airline, Retail, OEM, …), produce a digital-clone-grade demo repo.
   DO NOT USE FOR: incrementally adding one domain (use compose-domain
-  inside the substrate), authoring a new substrate from scratch,
-  pitch decks.
+  inside the fork), authoring a new substrate from scratch, pitch
+  decks.
 metadata:
   version: "1.0.0"
 ---
