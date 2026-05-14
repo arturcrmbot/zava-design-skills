@@ -76,7 +76,7 @@ runs `gh repo create` later if they want to push.
 ## Substrate paths (Zava control plane reference)
 
 The skill assumes the target substrate follows the
-[`zava-control-plane`](https://github.com/arturcrmbot/zava-control-plane)
+[`zava-control-plane`](<your-fork>/zava-control-plane)
 layout. The phases below reference these paths verbatim. If you fork
 this skill for a different substrate, update the path table here.
 
