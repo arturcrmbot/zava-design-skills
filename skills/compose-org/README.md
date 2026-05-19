@@ -62,6 +62,14 @@ See [`SKILL.md`](SKILL.md) for the canonical procedure.
 - **Mass-edit private engagement notes.** Briefs in `briefs/` are
   read; nothing under there is mutated.
 
+The target substrate's `compose-domain` skill now emits segment
+activities by default rather than per-phase MAF graphs.
+`compose-org` does not generate these files itself; it forks the
+substrate, after which `compose-domain` (executed inside the fork)
+produces the segment scaffold. See
+`zava-control-plane/plan/refactor-substrate-agentic-segments-1.md`
+for the canonical pattern.
+
 ## Output
 
 A new local git repo at `<substrate-parent>/<substrate>-<slug>/`
